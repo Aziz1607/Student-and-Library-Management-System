@@ -61,7 +61,7 @@ public class Client {
                     case 2: // Liste des épreuves d'un étudiant
                         etudiant = rechercherEtudiant(promotion, scanner);
                         if (etudiant != null) {
-                            String[] epreuves = etudiant.Liste_des_epreuves();
+                            String[] epreuves = etudiant.ListeDesEpreuves();
                             System.out.println(epreuves.length);
                             System.out.println("Liste des épreuves :");
                             for (String e : epreuves) {
@@ -73,7 +73,7 @@ public class Client {
                     case 3: // Calculer la moyenne d'un étudiant
                         etudiant = rechercherEtudiant(promotion, scanner);
                         if (etudiant != null) {
-                            float moyenne = etudiant.Calculer_la_moyenne();
+                            double moyenne = etudiant.CalculerLaMoyenne();
                             System.out.println("Moyenne generale : " + moyenne);
                         }
                         break;
@@ -82,13 +82,13 @@ public class Client {
                         System.out.print("Entrez le numéro de l'étudiant : ");
                         int numeroRecherche = scanner.nextInt();
                         scanner.nextLine(); // Consommer la ligne
-                        Etudiant etudiantRech = promotion.Rechercher_un_etudiant( numeroRecherche);
+                        Etudiant etudiantRech = promotion.RechercherUnEtudiant( numeroRecherche);
 
                         if (etudiantRech != null) {
                             System.out.print("Num du livre a emprunte: ");
 
                             int num = scanner.nextInt();
-                            System.out.println(etudiantRech.Emprunter_un_livre(num));
+                            System.out.println(etudiantRech.EmprunterUnLivre(num));
                             //System.out.println("Livre emprunté avec succès !");
                         }
                         break;
@@ -100,7 +100,7 @@ public class Client {
                         String prenom = scanner.nextLine();
                         System.out.print("Numéro : ");
                         long numero = scanner.nextLong();
-                        promotion.Ajouter_un_etudiant(nomEtudiant, prenom, (int) numero);
+                        promotion.AjouterUnEtudiant(nomEtudiant, prenom, (int) numero);
                         System.out.println("Étudiant ajouté avec succès !");
                         break;
 
@@ -108,7 +108,7 @@ public class Client {
                         System.out.print("Entrez le numéro de l'étudiant à rechercher : ");
                         numeroRecherche = scanner.nextInt();
                         scanner.nextLine(); // Consommer la ligne
-                        Etudiant etudiantRecherche = promotion.Rechercher_un_etudiant( numeroRecherche);
+                        Etudiant etudiantRecherche = promotion.RechercherUnEtudiant( numeroRecherche);
                         if (etudiantRecherche != null) {
 
                             System.out.println("Étudiant trouvé : " + etudiantRecherche.toStringIDL());
@@ -118,7 +118,7 @@ public class Client {
                         break;
 
                     case 7: // Calculer la moyenne de la promotion
-                        float moyennePromo = promotion.Calculer_moyenne_de_la_promotion();
+                        float moyennePromo = promotion.CalculerMoyenneDeLaPromotion();
                         System.out.println("Moyenne de la promotion : " + moyennePromo);
                         break;
 
@@ -142,7 +142,7 @@ public class Client {
         System.out.print("Entrez le numéro de l'étudiant : ");
         long numero = scanner.nextLong();
         scanner.nextLine(); // Consommer la ligne
-        Etudiant etudiant = promotion.Rechercher_un_etudiant((int) numero);
+        Etudiant etudiant = promotion.RechercherUnEtudiant((int) numero);
         if (etudiant == null) {
             System.out.println("Étudiant non trouvé.");
         }
