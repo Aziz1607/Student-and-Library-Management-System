@@ -1,0 +1,36 @@
+
+module Institue {
+
+    // Define the structure for an Epreuve
+    struct Epreuve {
+        string nom;
+        double note;
+        double coefficient;
+    };
+
+    // Define the structure for a Livre
+    struct Livre {
+        long numero;
+        string nom;
+        string auteur;
+        string collection;
+        string date_publication;
+    };
+
+    typedef sequence<string> StringList;
+    typedef sequence<Livre> LivreList;
+    // Define the interface for an Etudiant
+    interface Etudiant {
+        void AjouterUneEpreuve();
+        StringList ListeDesEpreuves(); // Return a list of strings
+        double CalculerLaMoyenne();
+        Livre EmprunterUnLivre(in Livre book, inout LivreList livres); // Pass a sequence of Livre
+    };
+
+    // Define the interface for a Promotion
+    interface Promotion {
+        void AjouterUnEtudiant();
+        Etudiant RechercherUnEtudiant(in long numero); // Search for a student by number
+        double CalculerMoyenneDeLaPromotion();
+    };
+};
