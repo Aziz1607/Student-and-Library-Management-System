@@ -2,6 +2,7 @@ package client;
 
 
 import Institue.Etudiant;
+import Institue.Livre;
 import Institue.Promotion;
 import Institue.PromotionHelper;
 import org.omg.CORBA.*;
@@ -96,7 +97,8 @@ public class Client {
                         if (etudiantRech != null) {
                             System.out.print("Num du livre a emprunte: ");
                             int num = scanner.nextInt();
-                            System.out.println(etudiantRech.EmprunterUnLivre(num));
+                            Livre l1= etudiantRech.EmprunterUnLivre(num);
+                            System.out.println("livre emprunté:"+" nom: "+l1.nom+"/ auteur: "+l1.auteur+"/ date_publication: "+l1.date_publication+"/ collection: "+l1.collection);
                             //System.out.println("Livre emprunté avec succès !");
                         }
                         break;
