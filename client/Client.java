@@ -1,6 +1,6 @@
 package client;
 
-import serveur.EtudiantImpl;
+
 import Institue.Etudiant;
 import Institue.Promotion;
 import Institue.PromotionHelper;
@@ -52,8 +52,16 @@ public class Client {
                         Etudiant etudiant = promotion.RechercherUnEtudiant(nume);
 
                         if (etudiant != null) {
-                         
-                            etudiant.AjouterUneEpreuve();
+                            Scanner input = new Scanner(System.in);
+                            System.out.print("Donner le nom de l'epreuve: ");
+                            String nom =input.nextLine();
+                            System.out.print("Donner le note de l'epreuve: ");
+                            double note = input.nextDouble();
+                            System.out.println("Donner le coefficient de l'epreuve: ");
+                            double coefficient = input.nextDouble();
+
+
+                            etudiant.AjouterUneEpreuve(nom,note,coefficient);
                             System.out.println("Epreuve ajoutée avec succès !");
                         }
                         break;
@@ -79,6 +87,7 @@ public class Client {
                         break;
 
                     case 4: // Emprunter un livre pour un étudiant
+                
                         System.out.print("Entrez le numéro de l'étudiant : ");
                         int numeroRecherche = scanner.nextInt();
                         scanner.nextLine(); // Consommer la ligne
@@ -86,7 +95,6 @@ public class Client {
 
                         if (etudiantRech != null) {
                             System.out.print("Num du livre a emprunte: ");
-
                             int num = scanner.nextInt();
                             System.out.println(etudiantRech.EmprunterUnLivre(num));
                             //System.out.println("Livre emprunté avec succès !");
@@ -94,13 +102,15 @@ public class Client {
                         break;
 
                     case 5: // Ajouter un étudiant
-                        System.out.print("Nom : ");
-                        String nomEtudiant = scanner.nextLine();
-                        System.out.print("Prénom : ");
-                        String prenom = scanner.nextLine();
-                        System.out.print("Numéro : ");
-                        long numero = scanner.nextLong();
-                        promotion.AjouterUnEtudiant(nomEtudiant, prenom, (int) numero);
+                    Scanner input = new Scanner(System.in);
+                    System.out.println("Donner le numero de l'etudiant: ");
+                    int numero = input.nextInt();
+                    System.out.print("Donner le nom de l'etudiant: ");
+                    String nom =input.nextLine();
+                    System.out.print("Donner le prenom de l'etudiant: ");
+                    String prenom = input.nextLine();
+
+                        promotion.AjouterUnEtudiant(numero,nom,prenom);
                         System.out.println("Étudiant ajouté avec succès !");
                         break;
 
@@ -118,7 +128,7 @@ public class Client {
                         break;
 
                     case 7: // Calculer la moyenne de la promotion
-                        float moyennePromo = promotion.CalculerMoyenneDeLaPromotion();
+                        double moyennePromo = promotion.CalculerMoyenneDeLaPromotion();
                         System.out.println("Moyenne de la promotion : " + moyennePromo);
                         break;
 

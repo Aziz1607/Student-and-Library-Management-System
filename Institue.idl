@@ -21,15 +21,16 @@ module Institue {
     typedef sequence<Livre> LivreList;
     // Define the interface for an Etudiant
     interface Etudiant {
-        void AjouterUneEpreuve();
+        void AjouterUneEpreuve(in string nom,in double note,in double coefficient);
         StringList ListeDesEpreuves(); // Return a list of strings
         double CalculerLaMoyenne();
-        Livre EmprunterUnLivre(in Livre book, inout LivreList livres); // Pass a sequence of Livre
+        Livre EmprunterUnLivre(in long bookNumber); // Pass a sequence of Livre
+        string toStringIDL();
     };
 
     // Define the interface for a Promotion
     interface Promotion {
-        void AjouterUnEtudiant();
+        void AjouterUnEtudiant(in long numero,in string nom,in string prenom);
         Etudiant RechercherUnEtudiant(in long numero); // Search for a student by number
         double CalculerMoyenneDeLaPromotion();
     };

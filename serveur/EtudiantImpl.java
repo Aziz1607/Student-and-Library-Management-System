@@ -3,11 +3,8 @@ package serveur;
 import Institue.EtudiantPOA;
 import Institue.Epreuve;
 import Institue.Livre;
-import Institue.LivreListHolder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class EtudiantImpl extends EtudiantPOA {
     private int num ;
@@ -16,6 +13,17 @@ public class EtudiantImpl extends EtudiantPOA {
     private List<Epreuve> epreuves = new ArrayList<>();
     private List<Livre> livres = new ArrayList<>();
     int nbLivreEmprunte =0;
+
+    Livre[] biblio ={new Livre(1, "Les Misérables", "Victor Hugo", "Littérature Française", "1862"),
+    new Livre(2, "1984", "George Orwell", "Science-Fiction", "1949"),
+    new Livre(3, "Le Petit Prince", "Antoine de Saint-Exupéry", "Jeunesse", "1943"),
+    new Livre(4, "La Peste", "Albert Camus", "Philosophie", "1947"),
+    new Livre(5, "Don Quichotte", "Miguel de Cervantes", "Classique", "1605"),
+    new Livre(6, "Crime et Châtiment", "Fiodor Dostoïevski", "Roman Russe", "1866"),
+    new Livre(7, "L'Étranger", "Albert Camus", "Philosophie", "1942")
+    
+
+};
 
     public EtudiantImpl(int num,String nom, String prenom){
         this.num=num;
@@ -44,18 +52,12 @@ public class EtudiantImpl extends EtudiantPOA {
     }
 
     @Override
-    public void AjouterUneEpreuve() {
-    Scanner input = new Scanner(System.in);
-    System.out.print("Donner le nom de l'epreuve: ");
-    String nom =input.nextLine();
-    System.out.print("Donner le note de l'epreuve: ");
-    double note = input.nextDouble();
-    System.out.println("Donner le coefficient de l'epreuve: ");
-    double coefficient = input.nextDouble();
+    public void AjouterUneEpreuve(String nom,double note, double coefficient) {
+
 
     Epreuve epreuve = new Epreuve(nom,note,coefficient);
     epreuves.add(epreuve);
-    input.close();
+    ;
     }
 
     @Override
@@ -80,26 +82,29 @@ public class EtudiantImpl extends EtudiantPOA {
         return moy;
     }
 
-    public Livre EmprunterUnLivre(Livre book,LivreListHolder livresHolder) {
+    public Livre EmprunterUnLivre(int bookNumber) {
 
-        List<Livre> livresList = new ArrayList<>(Arrays.asList(livresHolder.value));
+     
         if(nbLivreEmprunte>=2){
             System.out.println("vous avez emprunter deja 2 livre");
             return null;
         }
         else {
-            for (Livre livre : livresList) {
-                if(book.nom==livre.nom){
+            for (Livre livre : biblio) {
+                if(bookNumber==livre.numero){
                     this.livres.add(livre);
                     nbLivreEmprunte+=1;
                     return livre;
                 }
              }
         }
-                return book;
+                return  this.livres.get(nbLivreEmprunte-1);
     }
+ 
 
-  
+  public String toStringIDL(){
+    return "num= "+num+" /nom= "+nom+" /prenom= "+prenom;
+  }
 
 
   

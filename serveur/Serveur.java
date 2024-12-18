@@ -3,8 +3,6 @@ package serveur;
 import org.omg.CORBA.*;
 import org.omg.CosNaming.*;
 
-import serveur.EtudiantImpl;
-import serveur.Promotionimpl;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
