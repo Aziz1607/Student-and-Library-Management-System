@@ -1,5 +1,5 @@
 package serveur;
-
+import java.text.DecimalFormat;
 import Institue.EtudiantPOA;
 import Institue.Epreuve;
 import Institue.Livre;
@@ -73,14 +73,25 @@ public class EtudiantImpl extends EtudiantPOA {
     }
 
     @Override
-    public double CalculerLaMoyenne() {
-        double moy=0,som=0;
-        for (Epreuve ep : epreuves) {
-           som+= ep.note*ep.coefficient;
-        }
-        moy = som / epreuves.size();
-        return moy;
+public double CalculerLaMoyenne() {
+    double moy = 0, som = 0, coef = 0;
+
+    // Calcul de la somme pondérée et du total des coefficients
+    for (Epreuve ep : epreuves) {
+        som += ep.note * ep.coefficient;
+        coef += ep.coefficient;
     }
+
+    // Calcul de la moyenne
+    moy = som / coef;
+
+    // Création de l'objet DecimalFormat pour limiter à 2 décimales
+    DecimalFormat df = new DecimalFormat("#.00");
+
+    // Retourner la moyenne formatée à 2 décimales
+    return Double.parseDouble(df.format(moy));
+}
+
 
     public Livre EmprunterUnLivre(int bookNumber) {
 
@@ -91,7 +102,10 @@ public class EtudiantImpl extends EtudiantPOA {
         }
         else {
             for (Livre livre : biblio) {
+                
                 if(bookNumber==livre.numero){
+
+                    
                     this.livres.add(livre);
                     nbLivreEmprunte+=1;
                     return livre;

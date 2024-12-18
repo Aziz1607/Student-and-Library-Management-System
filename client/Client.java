@@ -49,16 +49,16 @@ public class Client {
                         //Etudiant etudiant = rechercherEtudiant(promotion, scanner);
                         System.out.print("Tapez le numero d etudiant ");
                         int nume = scanner.nextInt();
+                        scanner.nextLine();
                         Etudiant etudiant = promotion.RechercherUnEtudiant(nume);
-
+                       
                         if (etudiant != null) {
-                            Scanner input = new Scanner(System.in);
                             System.out.print("Donner le nom de l'epreuve: ");
-                            String nom =input.nextLine();
+                            String nom =scanner.nextLine();
                             System.out.print("Donner le note de l'epreuve: ");
-                            double note = input.nextDouble();
+                            double note = scanner.nextDouble();
                             System.out.println("Donner le coefficient de l'epreuve: ");
-                            double coefficient = input.nextDouble();
+                            double coefficient = scanner.nextDouble();
 
 
                             etudiant.AjouterUneEpreuve(nom,note,coefficient);
@@ -103,12 +103,22 @@ public class Client {
 
                     case 5: // Ajouter un étudiant
                     Scanner input = new Scanner(System.in);
+
+                    // Asking for student number
                     System.out.println("Donner le numero de l'etudiant: ");
                     int numero = input.nextInt();
-                    System.out.print("Donner le nom de l'etudiant: ");
-                    String nom =input.nextLine();
-                    System.out.print("Donner le prenom de l'etudiant: ");
+                    
+                    // Consume the newline left by nextInt
+                    input.nextLine();  // This will consume the leftover newline
+                    
+                    // Asking for student name
+                    System.out.println("Donner le nom de l'etudiant: ");
+                    String nom = input.nextLine();
+                    
+                    // Asking for student surname
+                    System.out.println("Donner le prenom de l'etudiant: ");
                     String prenom = input.nextLine();
+                    
 
                         promotion.AjouterUnEtudiant(numero,nom,prenom);
                         System.out.println("Étudiant ajouté avec succès !");
