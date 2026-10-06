@@ -10,9 +10,8 @@ Il permet la gestion à distance d'une promotion d'étudiants, le calcul des moy
 1. [Architecture & Vue d'ensemble](#-architecture--vue-densemble)
 2. [Structure du projet](#-structure-du-projet)
 3. [Prérequis importants (Java 8)](#-prérequis-importants-java-8)
-4. [Analyse du code & Améliorations apportées](#-analyse-du-code--améliorations-apportées)
-5. [Guide de compilation et d'exécution](#-guide-de-compilation-et-dexécution)
-6. [Fonctionnalités du Client](#-fonctionnalités-du-client)
+4. [Guide de compilation et d'exécution](#-guide-de-compilation-et-dexécution)
+5. [Fonctionnalités du Client](#-fonctionnalités-du-client)
 
 ---
 
