@@ -71,46 +71,6 @@ $env:Path = "$env:JAVA_HOME\bin;$env:Path"
 ```
 *(Les scripts `.bat` fournis détectent automatiquement JDK 1.8 s'il est installé dans le chemin standard).*
 
----
-
-## 🔍 Analyse du code & Améliorations apportées
-
-Le code initial comportait plusieurs anomalies critiques qui provoquaient des plantages système ou faussaient les résultats. Voici les améliorations majeures apportées :
-
-### 1. Correction du calcul de la moyenne (`CalculerLaMoyenne`)
-* **Problème initial** : 
-  1. Si l'étudiant n'avait aucune épreuve (`totalCoef == 0`), le calcul produisait `NaN`.
-  2. L'utilisation de `DecimalFormat` dépendait de la langue du système. Sous un environnement français/européen, le formateur écrivait une virgule (ex: `"14,50"`), provoquant un crash immédiat `java.lang.NumberFormatException: For input string: "14,50"`.
-* **Correction** : Sécurisation de la division par zéro (retourne `0.0` si aucune épreuve) et arrondi à 2 décimales via `Math.round(moy * 100.0) / 100.0`, indépendant de la Locale.
-
-### 2. Correction de l'emprunt de livre (`EmprunterUnLivre`)
-* **Problème initial** :
-  1. En cas de livre inexistant sans emprunt préalable, la méthode exécutait `this.livres.get(-1)`, provoquant une `ArrayIndexOutOfBoundsException`.
-  2. Lorsque le quota de 2 livres était dépassé, la méthode renvoyait `null`. Or, en CORBA, un `struct` (`Livre`) **ne peut pas être nul lors de la sérialisation**, provoquant un `NullPointerException` fatale sur le serveur lors de la réponse au client.
-* **Correction** : 
-  - La méthode ne renvoie jamais `null`. En cas d'erreur ou de quota atteint, un objet `Livre` sentinelle explicatif avec des chaînes non nulles est retourné (ex: numéro 0 ou négatif avec message d'erreur).
-  - Validation du quota (maximum 2 livres par étudiant) et interdiction d'emprunter deux fois le même livre.
-
-### 3. Moyenne de la promotion (`CalculerMoyenneDeLaPromotion`)
-* **Problème initial** : Si la liste des étudiants était vide, `somme / 0` produisait `NaN`.
-* **Correction** : Vérification de liste vide (`return 0.0`) et arrondi sécurisé à 2 décimales.
-
-### 4. Gestion des étudiants en doublon
-* **Problème initial** : Aucun contrôle d'unicité lors de l'ajout d'un étudiant (`AjouterUnEtudiant`).
-* **Correction** : Vérification du numéro d'étudiant avant enregistrement pour éviter les doublons.
-
-### 5. Démarrage et arrêt du serveur (`Serveur.java`)
-* **Problème initial** : `Runtime.getRuntime().exec("tnameserv ...")` était exécuté de manière asynchrone sans attendre le démarrage du socket (race condition `COMM_FAILURE`), et le processus restait orphelin à l'arrêt.
-* **Correction** : Ajout d'un délai d'attente pour initialisation socket, gestion des cas où `tnameserv` tourne déjà, et ajout d'un `ShutdownHook` pour stopper proprement le service lors de l'arrêt du serveur.
-
-### 6. Robustesse de l'interface client (`Client.java`)
-* **Problème initial** : La moindre saisie de texte à la place d'un chiffre faisait crasher l'application avec `InputMismatchException`. Le client ne donnait aucune visibilité sur les livres disponibles avant d'emprunter.
-* **Correction** :
-  - Méthodes de lecture sécurisées (`lireEntier`, `lireDouble`) avec boucle de re-saisie.
-  - Support transparent du point `.` et de la virgule `,` pour la saisie des notes décimales.
-  - Validation des notes (entre 0 et 20) et des coefficients (> 0).
-  - Affichage automatique du catalogue de la bibliothèque lors de l'option d'emprunt.
-  - Messages clairs en cas de succès ou d'échec.
 
 ---
 
