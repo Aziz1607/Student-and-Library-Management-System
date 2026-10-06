@@ -1,0 +1,54 @@
+# === Java Class Files ===
+*.class
+*.jar
+*.war
+*.ear
+
+# === Build & Output Directories ===
+bin/
+out/
+target/
+build/
+
+# === CORBA / ORB Runtime Databases ===
+orb.db/
+*.log
+
+# === Eclipse ===
+.classpath
+.project
+.settings/
+
+# === IntelliJ IDEA ===
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# === VS Code ===
+.vscode/
+
+# === NetBeans ===
+nbproject/private/
+nbbuild/
+dist/
+nbproject/genfiles.properties
+nbproject/project.xml
+
+# === Operating System Files ===
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# === Java Crash Logs ===
+hs_err_pid*
+replay_pid*
+

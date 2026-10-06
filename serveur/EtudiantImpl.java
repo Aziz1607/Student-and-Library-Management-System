@@ -1,129 +1,145 @@
 package serveur;
-import java.text.DecimalFormat;
-import Institue.EtudiantPOA;
-import Institue.Epreuve;
-import Institue.Livre;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import Institue.Epreuve;
+import Institue.EtudiantPOA;
+import Institue.Livre;
 
 public class EtudiantImpl extends EtudiantPOA {
-    private int num ;
+    private int num;
     private String nom;
     private String prenom;
-    private List<Epreuve> epreuves = new ArrayList<>();
-    private List<Livre> livres = new ArrayList<>();
-    int nbLivreEmprunte =0;
+    private final List<Epreuve> epreuves = new ArrayList<>();
+    private final List<Livre> livres = new ArrayList<>();
 
-    Livre[] biblio ={new Livre(1, "Les Misérables", "Victor Hugo", "Littérature Française", "1862"),
-    new Livre(2, "1984", "George Orwell", "Science-Fiction", "1949"),
-    new Livre(3, "Le Petit Prince", "Antoine de Saint-Exupéry", "Jeunesse", "1943"),
-    new Livre(4, "La Peste", "Albert Camus", "Philosophie", "1947"),
-    new Livre(5, "Don Quichotte", "Miguel de Cervantes", "Classique", "1605"),
-    new Livre(6, "Crime et Châtiment", "Fiodor Dostoïevski", "Roman Russe", "1866"),
-    new Livre(7, "L'Étranger", "Albert Camus", "Philosophie", "1942")
-    
+    // Catalogue partagé des livres disponibles dans la bibliothèque
+    public static final Livre[] BIBLIOTHEQUE = {
+        new Livre(1, "Les Misérables", "Victor Hugo", "Littérature Française", "1862"),
+        new Livre(2, "1984", "George Orwell", "Science-Fiction", "1949"),
+        new Livre(3, "Le Petit Prince", "Antoine de Saint-Exupéry", "Jeunesse", "1943"),
+        new Livre(4, "La Peste", "Albert Camus", "Philosophie", "1947"),
+        new Livre(5, "Don Quichotte", "Miguel de Cervantes", "Classique", "1605"),
+        new Livre(6, "Crime et Châtiment", "Fiodor Dostoïevski", "Roman Russe", "1866"),
+        new Livre(7, "L'Étranger", "Albert Camus", "Philosophie", "1942")
+    };
 
-};
-
-    public EtudiantImpl(int num,String nom, String prenom){
-        this.num=num;
-        this.nom=nom;
-        this.prenom=prenom;
+    public EtudiantImpl(int num, String nom, String prenom) {
+        this.num = num;
+        this.nom = (nom != null) ? nom.trim() : "";
+        this.prenom = (prenom != null) ? prenom.trim() : "";
     }
+
     public String getNom() {
         return nom;
     }
+
     public void setNom(String nom) {
-        this.nom = nom;
+        this.nom = (nom != null) ? nom.trim() : "";
     }
 
     public int getNum() {
         return num;
     }
+
     public void setNum(int num) {
         this.num = num;
     }
+
     public String getPrenom() {
         return prenom;
     }
 
     public void setPrenom(String prenom) {
-        this.prenom = prenom;
+        this.prenom = (prenom != null) ? prenom.trim() : "";
+    }
+
+    public int getNombreEpreuves() {
+        return epreuves.size();
+    }
+
+    public List<Livre> getLivresEmpruntes() {
+        return Collections.unmodifiableList(livres);
     }
 
     @Override
-    public void AjouterUneEpreuve(String nom,double note, double coefficient) {
+    public void AjouterUneEpreuve(String nom, double note, double coefficient) {
+        String nomEpreuve = (nom != null && !nom.trim().isEmpty()) ? nom.trim() : "Épreuve sans nom";
+        double noteValidee = Math.max(0.0, Math.min(20.0, note));
+        double coeffValide = (coefficient > 0.0) ? coefficient : 1.0;
 
-
-    Epreuve epreuve = new Epreuve(nom,note,coefficient);
-    epreuves.add(epreuve);
-    ;
+        Epreuve epreuve = new Epreuve(nomEpreuve, noteValidee, coeffValide);
+        epreuves.add(epreuve);
+        System.out.println("Épreuve ajoutée pour l'étudiant [" + num + " " + this.nom + "] : "
+                + nomEpreuve + " (Note: " + noteValidee + "/20, Coeff: " + coeffValide + ")");
     }
 
     @Override
     public String[] ListeDesEpreuves() {
-        String[] listeEp =new String[epreuves.size()];
-        int cpt =0;
-        for (Epreuve ep : epreuves) {
-            listeEp[cpt]= ep.afficher();
-            cpt+=1;
+        String[] listeEp = new String[epreuves.size()];
+        for (int i = 0; i < epreuves.size(); i++) {
+            Epreuve ep = epreuves.get(i);
+            listeEp[i] = "Matière : " + ep.nom + " | Note : " + ep.note + "/20 | Coeff : " + ep.coefficient;
         }
-
         return listeEp;
     }
 
     @Override
-public double CalculerLaMoyenne() {
-    double moy = 0, som = 0, coef = 0;
+    public double CalculerLaMoyenne() {
+        if (epreuves.isEmpty()) {
+            return 0.0;
+        }
 
-    // Calcul de la somme pondérée et du total des coefficients
-    for (Epreuve ep : epreuves) {
-        som += ep.note * ep.coefficient;
-        coef += ep.coefficient;
+        double som = 0.0;
+        double coefTotal = 0.0;
+
+        for (Epreuve ep : epreuves) {
+            som += ep.note * ep.coefficient;
+            coefTotal += ep.coefficient;
+        }
+
+        if (coefTotal <= 0.0) {
+            return 0.0;
+        }
+
+        double moy = som / coefTotal;
+        // Arrondi sécurisé à 2 décimales indépendant de la Locale
+        return Math.round(moy * 100.0) / 100.0;
     }
 
-    // Calcul de la moyenne
-    moy = som / coef;
-
-    // Création de l'objet DecimalFormat pour limiter à 2 décimales
-    DecimalFormat df = new DecimalFormat("#.00");
-
-    // Retourner la moyenne formatée à 2 décimales
-    return Double.parseDouble(df.format(moy));
-}
-
-
+    @Override
     public Livre EmprunterUnLivre(int bookNumber) {
-
-     
-        if(nbLivreEmprunte>=2){
-            System.out.println("vous avez emprunter deja 2 livre");
-            return null;
+        // Règle 1 : Limite de 2 livres par étudiant
+        if (livres.size() >= 2) {
+            System.out.println("Refus d'emprunt pour l'étudiant [" + num + "] : quota de 2 livres déjà atteint.");
+            return new Livre(0, "Quota de 2 livres déjà atteint", "", "", "");
         }
-        else {
-            for (Livre livre : biblio) {
-                
-                if(bookNumber==livre.numero){
 
-                    
-                    this.livres.add(livre);
-                    nbLivreEmprunte+=1;
-                    return livre;
-                }
-             }
+        // Règle 2 : Vérifier si l'étudiant n'a pas déjà emprunté ce livre
+        for (Livre dejaEmprunte : livres) {
+            if (dejaEmprunte.numero == bookNumber) {
+                System.out.println("Refus d'emprunt pour l'étudiant [" + num + "] : livre déjà emprunté.");
+                return new Livre(-1, "Livre déjà emprunté par cet étudiant", "", "", "");
+            }
         }
-                return  this.livres.get(nbLivreEmprunte-1);
+
+        // Règle 3 : Chercher le livre dans le catalogue de la bibliothèque
+        for (Livre livre : BIBLIOTHEQUE) {
+            if (livre.numero == bookNumber) {
+                this.livres.add(livre);
+                System.out.println("Livre emprunté avec succès par l'étudiant [" + num + "] : " + livre.nom);
+                return livre;
+            }
+        }
+
+        // Livre introuvable
+        System.out.println("Refus d'emprunt pour l'étudiant [" + num + "] : livre " + bookNumber + " introuvable.");
+        return new Livre(-2, "Livre introuvable dans la bibliothèque", "", "", "");
     }
- 
 
-  public String toStringIDL(){
-    return "num= "+num+" /nom= "+nom+" /prenom= "+prenom;
-  }
-
-
-  
+    @Override
+    public String toStringIDL() {
+        return "Numéro: " + num + " | Nom: " + nom + " | Prénom: " + prenom;
+    }
 }
-
-
-
-

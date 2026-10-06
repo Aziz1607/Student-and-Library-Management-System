@@ -24,7 +24,13 @@ public final class Epreuve implements org.omg.CORBA.portable.IDLEntity
     note = _note;
     coefficient = _coefficient;
   } // ctor
+
   public String afficher() {
-    return this.nom;
-    }
+    return "Matière : " + this.nom + ", Note : " + this.note + "/20, Coeff : " + this.coefficient;
+  }
+
+  @Override
+  public String toString() {
+    return afficher();
+  }
 } // class Epreuve
